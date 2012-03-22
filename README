@@ -1,0 +1,55 @@
+Grassembler - graph-based assembly of short read sequences.
+
+As a class project, build an eulerian assembler.
+
+Input will be 5000 reads of length 100 bases from a random 50 Kb chunk
+of NC_010278, Actinobacillus pleuropneumoniae serovar 3 str. JL03
+chromosome, complete genome. The chromosome is 2242062 bases long, and circular.
+
+Let's generate a random starting position:
+
+>>> import ramdom
+>>> random.randint(0, 2242062-50000)
+896878
+
+Now we can slice out the piece starting at 896878 (zero based).
+
+$ python slice.py
+$ head slice.fasta
+>NC_010278.1 50000 bases starting at position 896878
+GAGCTTACGCCGGAATTATTGGTCGATCTCCAATCCGGTAACTACGATCGTGGGATTGTA
+ACCTTACCTTATGTACGTCAATCGGATAACCAAACCGTGTATATTCCGCAAAGCATTATC
+GGCAACTTATTTGTTTCAAACGGTATGTCGGCTGGTAATACGAAAAACGAAGCGCGTGTA
+CAAGGTTTGTCGGAAGTGTTCGAACGTTTTGTGAAAAACCGTATTATTACTGAAGCAATC
+AGCTTACCGGAAATTCCGCAAAGCGTGATTGACGGCTATCCGACAATCAAAGCGTCTATC
+GAAAAACTTGAGCAAGAAGGCTTCCCGATTTTATGCTATGACGCATCATTAGGCGGTGAA
+TTCCCGGTTATTTGTGTGATCTTGTTAAATCCGAATAATGGTACTTGTTTCGCTTCATTC
+GGTGCACACCCGAATTTCCAAGTGGCGTTTGAACGTACGGTAACCGAGTTATTACAAGGT
+CGTAGCTTAAAAGATTTAGATGTATTTGCTCCGCCTTCATTTAATAATGAAGATGTGGCG
+
+Just to check:
+
+$ infoseq slice.fasta 
+Display basic information about sequences
+USA                      Database  Name           Accession      Type Length %GC    Organism            Description 
+fasta::slice.fasta:NC_010278.1 -              NC_010278.1    -              N    50000  40.55                      50000 bases starting at position 896878
+
+Now we basically want to pick 5000 random starting positions uniformly
+from 0 to 50000 and 5000 read lengths from a normal distribution with
+mean 100 and stddev 5. Slice those out and write to a file.
+
+$ simulate-reads.py
+$ head reads.fasta 
+>NC_010278.1 50000 bases starting at position 896878 fragment 42221:42321
+ATCACGCTGATAAACGAACGGTTCATTGCTTTACACATGATGTAAGACAGAATCGCACCT
+GATGAACCTACTAACGCACCGGTTACAATTAACAAGTCAT
+>NC_010278.1 50000 bases starting at position 896878 fragment 12945:13039
+TGGCTCGGACGTATTTACGGCGAAAGAATTCGCCAGTTTCCGCTAATTCGTAATATTGTG
+ACCGAAGAACGTTACCAAATGGTGCAGGAACGTT
+>NC_010278.1 50000 bases starting at position 896878 fragment 25563:25655
+TTACATCGCCGTATGCCAACTGTGCCAAGCTCACATCCAAATTACCTTGAATCGTTTTCT
+CGGTATTTACTTTTCCTTTTGCGACTAAGTTT
+>NC_010278.1 50000 bases starting at position 896878 fragment 15165:15269
+
+Next step: read reads, build a graph for input into Eulerian path.
+
