@@ -104,9 +104,10 @@ class Graph:
 #    \_/\___|___/\__| \_____/ \___/|_| |_|\___|   #
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-G = Graph()
-Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
-G.initWithEdges(list(Edges))
-for v in G.vertexhash:
-    print G.bfs(G.a19merhash[v])
-G.createCytoscapeFile("dummy")
+if __name__ == '__main__':
+    G = Graph()
+    Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
+    G.initWithEdges(list(Edges))
+    for v in G.vertexhash:
+        print G.bfs(G.a19merhash[v])
+    G.createCytoscapeFile("dummy")
