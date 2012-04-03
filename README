@@ -53,3 +53,26 @@ CGGTATTTACTTTTCCTTTTGCGACTAAGTTT
 
 Next step: read reads, build a graph for input into Eulerian path.
 
+2012/04/03 - HOZ
+
+Richard contributed a Graph class with some skeleton functions and
+some test cases. He implemented manual graph constructors and a
+breadth first search.
+
+The test harness can be run from the command line:
+
+$ python Graph.py 
+[['B', 'B', 'B', 'W', 'W', 'W'], [0, 1, 1, (), (), ()], ['NIL', 0, 0, 'NIL', 'NIL', 'NIL']]
+[['W', 'B', 'W', 'W', 'W', 'W'], [(), 0, (), (), (), ()], ['NIL', 'NIL', 'NIL', 'NIL', 'NIL', 'NIL']]
+[['W', 'W', 'B', 'W', 'W', 'W'], [(), (), 0, (), (), ()], ['NIL', 'NIL', 'NIL', 'NIL', 'NIL', 'NIL']]
+[['B', 'B', 'B', 'B', 'W', 'W'], [1, 2, 1, 0, (), ()], [3, 0, 3, 'NIL', 'NIL', 'NIL']]
+[['B', 'B', 'B', 'B', 'B', 'W'], [1, 2, 2, 1, 0, ()], [4, 0, 3, 4, 'NIL', 'NIL']]
+[['B', 'B', 'B', 'B', 'B', 'B'], [2, 3, 2, 1, 1, 0], [3, 0, 3, 5, 5, 'NIL']]
+two  predecessor  zero
+two  predecessor  one
+three  predecessor  two
+three  predecessor  one
+fourth  predecessor  three
+fourth  predecessor  two
+five  predecessor  three
+five  predecessor  fourth
