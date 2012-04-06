@@ -50,9 +50,12 @@ class Graph:
     #                
     def createCytoscapeFile(self,filepath):
         #       Will print in standar output, but when finished to the filepath
+        OutFile = open(filepath,'w')
         for vout in range(0,len(self.adjlist)):
             for vin in self.adjlist[vout]:
-                print self.vertexhash[vout]," predecessor ",self.vertexhash[vin]
+                OutFile.write(self.vertexhash[vout]," predecessor ",self.vertexhash[vin])
+        OutFile.close()
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     # Breadth-First Search Method: This methos apply a breadth-first search 
     # for find all the vertex that canbe reach from a given source vertex s.
