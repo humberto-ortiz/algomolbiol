@@ -18,19 +18,19 @@ class Graph:
     def initWithSeqReads(self,file,type):
         k = 20      # Edge size, vertex size is k-1
     	for record in SeqIO.parse(file, type):
-			for i in range(0, len(record) - (k-2)):
-				edgeseq = str(record[i:i+k].seq)
-				source = edgeseq[:k-1]
-				sink = edgeseq[1:]
-				for vertex in [source, sink]:
-					if vertex not in self.a19merhash:
+	    for i in range(0, len(record) - (k-2)):
+	        edgeseq = str(record[i:i+k].seq)
+		source = edgeseq[:k-1]
+		sink = edgeseq[1:]
+		for vertex in [source, sink]:
+		    if vertex not in self.a19merhash:
                     #   For each new vertex, maps the vertex to a unique index and appends
                     #   an empty list to the adjacency list
-						self.a19merhash[vertex] = len(self.a19merhash)
-						self.vertexhash.append(vertex)
-						self.adjlist.append([])
+		        self.a19merhash[vertex] = len(self.a19merhash)
+			self.vertexhash.append(vertex)
+			self.adjlist.append([])
             #   Fills in the adjacency list
-				self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
+		self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
 
 
     #
