@@ -1,3 +1,4 @@
+from Bio import SeqIO
 #
 # Class Description Comming Soon
 #
@@ -129,3 +130,8 @@ if __name__ == '__main__':
     for v in G.vertexhash:
         print G.bfs(G.a19merhash[v])
     G.createCytoscapeFile("dummy")
+
+    ## read a small test sequence database.
+    G.initWithSeqReads("test.fasta", "fasta")
+    print len(G.vertexhash)
+    
