@@ -89,23 +89,17 @@ class Graph:
     # Breadth-First Search Method: This methos apply a breadth-first search 
     # for find all the vertex that canbe reach from a given source vertex s.
     # Input: 
-    #   s the source vertex
+    #   s <the source vertex.>
     # Output:
-    #   [color,distance,predecessor]
-    #       color is a list with labels in the nodes that can be reached 
-    #        from s.
-    #             'B' for visited reachable.
-    #             'W' not visited not reachable.
-    #       distance is a list with distance of the index vertex to the 
-    #        source () means infinity.
-    #       predecessor is a list with the predecessor of the index vertex.
-    #        NIL if no predecessor.
+    #   visited <a list with the verxter that can be reach from the source.>
+    #       
     # Last update(03/28/2012) 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     def bfs(self,s):
         color=[]
         distance=[]
         predecessor=[]
+        visited = []        
         for i in range(0,len(self.vertexhash)):
             color.append('W')
             distance.append(())
@@ -123,8 +117,9 @@ class Graph:
                     distance[v] = distance[u]+1
                     predecessor[v] = u
                     Q.append(v)
-            color[u] = 'B'           
-        return [color,distance,predecessor]
+            color[u] = 'B'
+            visited.append(u);
+        return visited#[color,distance,predecessor]
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -146,5 +141,5 @@ G.createCytoscapeFile("test.sif");
 print G.vertexDegrees()
     ## read a small test sequence database.
 G.initWithSeqReads("test.fasta", "fasta")
-   print len(G.vertexhash)
+print len(G.vertexhash)
     
