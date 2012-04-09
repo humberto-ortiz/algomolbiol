@@ -1,3 +1,4 @@
+from Bio import SeqIO
 #
 # Class Description Comming Soon
 #
@@ -10,13 +11,29 @@ class Graph:
         self.vertexhash = []
         self.a19merhash={}
         self.adjlist=[]
+        
     #    
-    #
+    # Method maps vertices to an index and viceversa, and fills and adjacency list
+    # of overlapping vertices, using sequence reads from a file.
     #    
-    def initWithSeqReads(file,type):
-        return 'not implemented yet'
+    def initWithSeqReads(self,file,type):
+        k = 20      # Edge size, vertex size is k-1
+        for record in SeqIO.parse(file, type):
+	    for i in range(0, len(record) - (k-2)):
+	        edgeseq = str(record[i:i+k].seq)
+		source = edgeseq[:k-1]
+		sink = edgeseq[1:]
+		for vertex in [source, sink]:
+		    if vertex not in self.a19merhash:
+                    #   For each new vertex, maps the vertex to a unique index and appends
+                    #   an empty list to the adjacency list
+		        self.a19merhash[vertex] = len(self.a19merhash)
+			self.vertexhash.append(vertex)
+			self.adjlist.append([])
+            #   Fills in the adjacency list
+		self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
     #
-    #
+    # 
     #    
     def initWithFile(file):
         return 'not implemented yet'
@@ -44,18 +61,30 @@ class Graph:
         #       Filling the adjacency list
         for i in range(0,len(EdgesList)):
             self.adjlist[self.a19merhash[EdgesList[i][0]]].append(self.a19merhash[EdgesList[i][1]])
+    #
+    # Return a list with the degree of each vertex
+    #                
+    def vertexDegrees(self):
+        degrees = [];
+        for i in range(0,len(self.adjlist)):
+            degrees.append(len(self.adjlist[i]))
+        return degrees
+    
+    #
+    # Return a the degree of the input vertex
+    #                
+    def vertexDegree(self,vertex):
+        return len(self.adjlist[vertex])
     
     #
     # Create a file tha can be imported to cytoscape for visualise the graph
     #                
     def createCytoscapeFile(self,filepath):
-        #       Will print in standar output, but when finished to the filepath
         OutFile = open(filepath,'w')
         for vout in range(0,len(self.adjlist)):
             for vin in self.adjlist[vout]:
-                OutFile.write(self.vertexhash[vout]," predecessor ",self.vertexhash[vin])
+                OutFile.write(self.vertexhash[vout]+" predecessor "+self.vertexhash[vin]+"\n") 
         OutFile.close()
-
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     # Breadth-First Search Method: This methos apply a breadth-first search 
     # for find all the vertex that canbe reach from a given source vertex s.
@@ -107,9 +136,15 @@ class Graph:
 #    \_/\___|___/\__| \_____/ \___/|_| |_|\___|   #
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-G = Graph()
-Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
-G.initWithEdges(list(Edges))
-for v in G.vertexhash:
-    print G.bfs(G.a19merhash[v])
-G.createCytoscapeFile("dummy")
+if __name__ == '__main__':
+    G = Graph()
+    Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
+    G.initWithEdges(list(Edges))
+    for v in G.vertexhash:
+        print G.bfs(G.a19merhash[v])
+G.createCytoscapeFile("test.sif");
+print G.vertexDegrees()
+    ## read a small test sequence database.
+G.initWithSeqReads("test.fasta", "fasta")
+   print len(G.vertexhash)
+    
