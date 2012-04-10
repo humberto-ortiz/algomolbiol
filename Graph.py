@@ -33,10 +33,6 @@ class Graph:
             #   Fills in the adjacency list
 		self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
 
-
-    #
-    #
-    #    
     def initWithFile(file):
         return 'not implemented yet'
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -63,36 +59,45 @@ class Graph:
         #       Filling the adjacency list
         for i in range(0,len(EdgesList)):
             self.adjlist[self.a19merhash[EdgesList[i][0]]].append(self.a19merhash[EdgesList[i][1]])
+    #
+    # Return a list with the degree of each vertex
+    #                
+    def vertexDegrees(self):
+        degrees = [];
+        for i in range(0,len(self.adjlist)):
+            degrees.append(len(self.adjlist[i]))
+        return degrees
+    
+    #
+    # Return a the degree of the input vertex
+    #                
+    def vertexDegree(self,vertex):
+        return len(self.adjlist[vertex])
     
     #
     # Create a file tha can be imported to cytoscape for visualise the graph
     #                
     def createCytoscapeFile(self,filepath):
-        #       Will print in standar output, but when finished to the filepath
+        OutFile = open(filepath,'w')
         for vout in range(0,len(self.adjlist)):
             for vin in self.adjlist[vout]:
-                print self.vertexhash[vout]," predecessor ",self.vertexhash[vin]
+                OutFile.write(self.vertexhash[vout]+" predecessor "+self.vertexhash[vin]+"\n") 
+        OutFile.close()
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     # Breadth-First Search Method: This methos apply a breadth-first search 
     # for find all the vertex that canbe reach from a given source vertex s.
     # Input: 
-    #   s the source vertex
+    #   s <the source vertex.>
     # Output:
-    #   [color,distance,predecessor]
-    #       color is a list with labels in the nodes that can be reached 
-    #        from s.
-    #             'B' for visited reachable.
-    #             'W' not visited not reachable.
-    #       distance is a list with distance of the index vertex to the 
-    #        source () means infinity.
-    #       predecessor is a list with the predecessor of the index vertex.
-    #        NIL if no predecessor.
+    #   visited <a list with the verxter that can be reach from the source.>
+    #       
     # Last update(03/28/2012) 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     def bfs(self,s):
         color=[]
         distance=[]
         predecessor=[]
+        visited = []        
         for i in range(0,len(self.vertexhash)):
             color.append('W')
             distance.append(())
@@ -110,8 +115,9 @@ class Graph:
                     distance[v] = distance[u]+1
                     predecessor[v] = u
                     Q.append(v)
-            color[u] = 'B'           
-        return [color,distance,predecessor]
+            color[u] = 'B'
+            visited.append(u);
+        return visited#[color,distance,predecessor]
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -129,9 +135,10 @@ if __name__ == '__main__':
     G.initWithEdges(list(Edges))
     for v in G.vertexhash:
         print G.bfs(G.a19merhash[v])
-    G.createCytoscapeFile("dummy")
+
+    G.createCytoscapeFile("test.sif");
+    print G.vertexDegrees()
 
     ## read a small test sequence database.
     G.initWithSeqReads("test.fasta", "fasta")
     print len(G.vertexhash)
-    
