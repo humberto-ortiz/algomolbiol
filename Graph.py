@@ -161,4 +161,4 @@ if __name__ == '__main__':
     ## read a small test sequence database.
     G.initWithSeqReads("test.fasta", "fasta")
     print len(G.vertexhash)
-    print g.components()
+    print G.components()
