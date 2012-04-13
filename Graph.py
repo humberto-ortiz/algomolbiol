@@ -134,7 +134,7 @@ class Graph:
             return knownaux([here],visited)
         def componentaux(vertices):
             if vertices:
-                return 1+componentaux(list(set(vertices).difference(known(vertices[0]))))
+                return 1+componentaux(list(set(vertices).difference(known(vertices[0]), visited)))
             else:
                 return 0
         return componentaux(self.vertexhash)
