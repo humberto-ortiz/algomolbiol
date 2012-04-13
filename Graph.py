@@ -118,7 +118,26 @@ class Graph:
             color[u] = 'B'
             visited.append(u);
         return visited#[color,distance,predecessor]
-
+    def components(self):
+        def known(self, here):
+            visited=[]
+            def knownaux(self, vertices, visited):
+                neigbours=[]
+                for vertex in vertices:
+                    for neighbour in self.adjlist[vertex]:
+                        if neighbour not in visited:
+                            neighbours.append(neighbour)
+                if neighbours:
+                    return knownaux(neighbours, visited.append(neighbours))
+                else:
+                    return visited
+            return knownaux([here],visited)
+        def componentaux(vertices):
+            if vertices:
+                return 1+componentaux(list(set(vertices).difference(known(vertices[0]))))
+            else:
+                return 0
+        return componentaux(vertexhash)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #   _____        _     ______                     #
@@ -142,3 +161,4 @@ if __name__ == '__main__':
     ## read a small test sequence database.
     G.initWithSeqReads("test.fasta", "fasta")
     print len(G.vertexhash)
+    print g.components()
