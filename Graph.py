@@ -137,7 +137,7 @@ class Graph:
                 return 1+componentaux(list(set(vertices).difference(known(vertices[0]))))
             else:
                 return 0
-        return componentaux(vertexhash)
+        return componentaux(self.vertexhash)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #   _____        _     ______                     #
