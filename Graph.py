@@ -119,9 +119,9 @@ class Graph:
             visited.append(u);
         return visited#[color,distance,predecessor]
     def components(self):
-        def known(self, here):
+        def known(here):
             visited=[]
-            def knownaux(self, vertices, visited):
+            def knownaux(vertices, visited):
                 neigbours=[]
                 for vertex in vertices:
                     for neighbour in self.adjlist[vertex]:
@@ -132,7 +132,7 @@ class Graph:
                 else:
                     return visited
             return knownaux([here],visited)
-        def componentaux(self,vertices):
+        def componentaux(vertices):
             if vertices:
                 return 1+componentaux(list(set(vertices).difference(known(vertices[0]))))
             else:
