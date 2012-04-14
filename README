@@ -34,7 +34,7 @@ Display basic information about sequences
 USA                      Database  Name           Accession      Type Length %GC    Organism            Description 
 fasta::slice.fasta:NC_010278.1 -              NC_010278.1    -              N    50000  40.55                      50000 bases starting at position 896878
 
-Now we basically want to pick 5000 random starting positions uniformly
+Now we basically want to pick 5000 random starting itions uniformly
 from 0 to 50000 and 5000 read lengths from a normal distribution with
 mean 100 and stddev 5. Slice those out and write to a file.
 

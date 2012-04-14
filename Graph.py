@@ -141,6 +141,12 @@ class Graph:
                 return 0
             
         return componentaux(self.a19merhash.values())
+    def transposed(self):
+        transposed = [[] for i in range(len(self.vertexhash))]
+        for vertex in range(len(self.vertexhash)):
+            for neighbor in self.adjlist[vertex]:
+                transposed[neighbor].append(vertex)
+        return transposed
     def scc(self):
         def dfs(vertex,neighbors):
             visited = []
@@ -157,10 +163,8 @@ class Graph:
                 result = [vertex]
                 result += dfsrec(vertex)
                 result.append(vertex)
-                print "first result", result
                 rest = list(set(self.a19merhash.values()).difference(result))
                 while rest:
-                    print "rest", rest
                     result.append(rest[0])
                     result += dfsrec(rest[0])
                     result.append(rest[0])
@@ -189,7 +193,7 @@ if __name__ == '__main__':
     print G.vertexDegrees()
     print "Debug"
     for vertex in G.a19merhash.values():
-        print vertex, G.adjlist[vertex]
+        print vertex, G.adjlist[vertex],G.transposed()[vertex]
     print G.scc()
     ## read a small test sequence database.
     #G.initWithSeqReads("test.fasta", "fasta")
