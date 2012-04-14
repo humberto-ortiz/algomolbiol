@@ -1,4 +1,4 @@
-from Bio import SeqIO
+#from Bio import SeqIO
 #
 # Class Description Comming Soon
 #
@@ -118,27 +118,56 @@ class Graph:
             color[u] = 'B'
             visited.append(u);
         return visited#[color,distance,predecessor]
+    
     def components(self):
-        def known(self, here):
-            visited=[]
+        def known(here):
             def knownaux(vertices, visited):
-                neigbours=[]
+                neighbours=[]
                 for vertex in vertices:
                     for neighbour in self.adjlist[vertex]:
                         if neighbour not in visited:
                             neighbours.append(neighbour)
+                            visited.append(neighbour)
                 if neighbours:
-                    return knownaux(neighbours, visited.append(neighbours))
+                    return knownaux(neighbours, visited)
                 else:
                     return visited
-            return knownaux([here],visited)
+            return knownaux(here,here)
+
         def componentaux(vertices):
             if vertices:
-                return 1+componentaux(list(set(vertices).difference(known(vertices[0]))))
+                return 1+componentaux(list(set(vertices).difference(set(known(vertices[:1])))))
             else:
                 return 0
-        return componentaux(self.vertexhash)
-
+            
+        return componentaux(self.a19merhash.values())
+    def scc(self):
+        def dfs(vertex,neighbors):
+            visited = []
+            def dfsaux(vertex):
+                def dfsrec(vertex):
+                    visited.append(vertex)
+                    collect=[]
+                    for neighbor in neighbors[vertex]:
+                        if neighbor not in visited:
+                            collect.append(neighbor)
+                            collect += dfsrec(neighbor)
+                            collect.append(neighbor)
+                    return collect
+                result = [vertex]
+                result += dfsrec(vertex)
+                result.append(vertex)
+                print "first result", result
+                rest = list(set(self.a19merhash.values()).difference(result))
+                while rest:
+                    print "rest", rest
+                    result.append(rest[0])
+                    result += dfsrec(rest[0])
+                    result.append(rest[0])
+                    rest = list(set(self.a19merhash.values()).difference(result))
+                return result
+            return dfsaux(vertex)
+        return dfs(4,self.adjlist)
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #   _____        _     ______                     #
 #  |_   _|      | |   |___  /                     #
@@ -151,14 +180,18 @@ class Graph:
 if __name__ == '__main__':
     G = Graph()
     Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
+    Components = [['c','g'],['g','f'],['f','g'],['h','h'],['d','h'],['c','d'],['d','c'],['g','h'],['a','b'],['b','c'],['b','f'],['e','f'],['b','e'],['e','a']]
     G.initWithEdges(list(Edges))
     for v in G.vertexhash:
         print G.bfs(G.a19merhash[v])
 
     G.createCytoscapeFile("test.sif");
     print G.vertexDegrees()
-
+    print "Debug"
+    for vertex in G.a19merhash.values():
+        print vertex, G.adjlist[vertex]
+    print G.scc()
     ## read a small test sequence database.
-    G.initWithSeqReads("test.fasta", "fasta")
-    print len(G.vertexhash)
-    print G.components()
+    #G.initWithSeqReads("test.fasta", "fasta")
+    #print len(G.vertexhash)
+    #print G.components()
