@@ -1,4 +1,4 @@
-#from Bio import SeqIO
+from Bio import SeqIO
 #
 # Class Description Comming Soon
 #
@@ -119,38 +119,18 @@ class Graph:
             visited.append(u);
         return visited#[color,distance,predecessor]
     
-    def components(self):
-        def known(here):
-            def knownaux(vertices, visited):
-                neighbours=[]
-                for vertex in vertices:
-                    for neighbour in self.adjlist[vertex]:
-                        if neighbour not in visited:
-                            neighbours.append(neighbour)
-                            visited.append(neighbour)
-                if neighbours:
-                    return knownaux(neighbours, visited)
-                else:
-                    return visited
-            return knownaux(here,here)
-
-        def componentaux(vertices):
-            if vertices:
-                return 1+componentaux(list(set(vertices).difference(set(known(vertices[:1])))))
-            else:
-                return 0
-            
-        return componentaux(self.a19merhash.values())
     def transposed(self):
         transposed = {i:[] for i in range(len(self.vertexhash))}
         for vertex in range(len(self.vertexhash)):
             for neighbor in self.adjlist[vertex]:
                 transposed[neighbor].append(vertex)
         return transposed
+
     def finishorder(self, order):
         for v in set(order):
             order.remove(v)
         return order
+
     def scc(self):
         def dfs(vertex,neighbors,whole):
             visited = []
