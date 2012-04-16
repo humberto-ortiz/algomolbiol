@@ -39,7 +39,7 @@ def fleurys(G):
 		for j in i:
 			totalEdges += 1
 
-	#This function implements Fleury's travelsal of the graph.
+	#This function implements Fleury's traversal of the graph.
 	def fleuryTraversal(source):
 
 		current = source
