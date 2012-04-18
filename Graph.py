@@ -11,7 +11,7 @@ class Graph:
         self.vertexhash = []
         self.a19merhash={}
         self.adjlist=[]
-        
+        self.reverse=[]
     #    
     # Method maps vertices to an index and viceversa, and fills and adjacency list
     # of overlapping vertices, using sequence reads from a file.
@@ -30,9 +30,11 @@ class Graph:
 		        self.a19merhash[vertex] = len(self.a19merhash)
 			self.vertexhash.append(vertex)
 			self.adjlist.append([])
+                        self.reverse.append([])
             #   Fills in the adjacency list
 		self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
-
+                self.reverse[self.a19merhash[sink]].append(self.a19merhash[source])
+                
     def initWithFile(file):
         return 'not implemented yet'
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -56,9 +58,11 @@ class Graph:
         #       Filling the adjacency list with empty list
         for i in range(0,len(self.a19merhash)):
             self.adjlist.append([])                
+            self.reverse.append([])                
         #       Filling the adjacency list
         for i in range(0,len(EdgesList)):
             self.adjlist[self.a19merhash[EdgesList[i][0]]].append(self.a19merhash[EdgesList[i][1]])
+            self.reverse[self.a19merhash[EdgesList[i][1]]].append(self.a19merhash[EdgesList[i][0]])
     #
     # Return a list with the degree of each vertex
     #                
@@ -76,12 +80,7 @@ class Graph:
 
     def indegree(self, sink):
         "Compute the indegree of the SINK vertex."
-        degree = 0
-        for source in range(len(self.vertexhash)):
-            for edge in self.adjlist[source]:
-                if sink == edge:
-                    degree += 1
-        return degree
+        return len(self.reverse[vertex])
     
     #
     # Create a file tha can be imported to cytoscape for visualise the graph
