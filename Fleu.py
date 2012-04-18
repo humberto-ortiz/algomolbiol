@@ -15,7 +15,7 @@ def fleurys(G):
 	#Check vertex degrees
 	for v in range(0,len(G.adjlist)):
 		degree = abs(G.vertexDegree(v) - G.indegree(v))
-		if degree % 2 == 1:   #if degree of v is odd.
+		if degree == 1:   #if v is semi-balanced.
 			oddcount += 1
 			
 			#Reject the graph if more than two vertices have odd degree.
@@ -26,9 +26,13 @@ def fleurys(G):
 			if oddSource == -1:
 				oddSource = v
 
-		#Store a vertex if it has even degree > 0.
-		elif G.vertexDegree(v) > 0:
+		#Store a balanced vertex that will be used as source if all vertices are balanced.
+		elif evenSource == -1 and degree == 0:
 			evenSource = v
+
+		#Reject the graph if any vertex has a difference between out and in degree greater than 1.
+		elif degree > 1:
+			return "There is no Eulerian path for this graph."
 
 	H = deepcopy(G) #make a copy of the graph for internal use.
 	eulerPath = []  #to store the edges of the Eulerian path.
@@ -45,6 +49,9 @@ def fleurys(G):
 		current = source
 		while len(eulerPath) < totalEdges:
 			initSCCcount = H.scc()             #initial SCC count, before edge removal.
+
+#			print current
+#			print H.adjlist[current]
 			
 			adj = deque(H.adjlist[current])    #to store adjacencies of vertex currently being considered.
 			remv_adj = adj.popleft()           #to store the adjacency just removed.
