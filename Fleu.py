@@ -14,7 +14,7 @@ def fleurys(G):
 	
 	#Check vertex degrees
 	for v in range(0,len(G.adjlist)):
-		degree = G.vertexDegree(v)
+		degree = abs(G.vertexDegree(v) - G.indegree(v))
 		if degree % 2 == 1:   #if degree of v is odd.
 			oddcount += 1
 			
@@ -27,7 +27,7 @@ def fleurys(G):
 				oddSource = v
 
 		#Store a vertex if it has even degree > 0.
-		elif degree > 0:
+		elif G.vertexDegree(v) > 0:
 			evenSource = v
 
 	H = deepcopy(G) #make a copy of the graph for internal use.
