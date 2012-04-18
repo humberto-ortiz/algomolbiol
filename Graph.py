@@ -73,6 +73,15 @@ class Graph:
     #                
     def vertexDegree(self,vertex):
         return len(self.adjlist[vertex])
+
+    def indegree(self, sink):
+        "Compute the indegree of the SINK vertex."
+        degree = 0
+        for source in range(len(self.vertexhash)):
+            for edge in self.adjlist[source]:
+                if sink == edge:
+                    degree += 1
+        return degree
     
     #
     # Create a file tha can be imported to cytoscape for visualise the graph
@@ -186,14 +195,16 @@ if __name__ == '__main__':
     Components = [['c','g'],['g','f'],['f','g'],['h','h'],['d','h'],['c','d'],['d','c'],['g','h'],['a','b'],['b','c'],['b','f'],['e','f'],['b','e'],['e','a']]
    
     G.initWithEdges(list(Components))
-    for v in G.vertexhash:
-        print G.bfs(G.a19merhash[v])
+#    for v in G.vertexhash:
+#        print G.bfs(G.a19merhash[v])
 
-    G.createCytoscapeFile("test.sif");
-    print G.vertexDegrees()
+    #G.createCytoscapeFile("test.sif");
+    print "Outdegrees?", G.vertexDegrees()
+    print "Indegrees", [G.indegree(vertex) for vertex in range(len(G.vertexhash))]
+        
     print "Debug"
     #for vertex in G.a19merhash.values(): print vertex, G.adjlist[vertex],G.transposed()[vertex]
-    print G.scc()
+    print "Strongly Connected Components", G.scc()
     ## read a small test sequence database.
     #G.initWithSeqReads("test.fasta", "fasta")
     #print len(G.vertexhash)
