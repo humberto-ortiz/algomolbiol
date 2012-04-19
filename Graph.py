@@ -11,7 +11,7 @@ class Graph:
         self.vertexhash = []
         self.a19merhash={}
         self.adjlist=[]
-        
+        self.reverse=[]
     #    
     # Method maps vertices to an index and viceversa, and fills and adjacency list
     # of overlapping vertices, using sequence reads from a file.
@@ -30,9 +30,11 @@ class Graph:
 		        self.a19merhash[vertex] = len(self.a19merhash)
 			self.vertexhash.append(vertex)
 			self.adjlist.append([])
+                        self.reverse.append([])
             #   Fills in the adjacency list
 		self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
-
+                self.reverse[self.a19merhash[sink]].append(self.a19merhash[source])
+                
     def initWithFile(file):
         return 'not implemented yet'
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -56,9 +58,11 @@ class Graph:
         #       Filling the adjacency list with empty list
         for i in range(0,len(self.a19merhash)):
             self.adjlist.append([])                
+            self.reverse.append([])                
         #       Filling the adjacency list
         for i in range(0,len(EdgesList)):
             self.adjlist[self.a19merhash[EdgesList[i][0]]].append(self.a19merhash[EdgesList[i][1]])
+            self.reverse[self.a19merhash[EdgesList[i][1]]].append(self.a19merhash[EdgesList[i][0]])
     #
     # Return a list with the degree of each vertex
     #                
@@ -76,12 +80,7 @@ class Graph:
 
     def indegree(self, sink):
         "Compute the indegree of the SINK vertex."
-        degree = 0
-        for source in range(len(self.vertexhash)):
-            for edge in self.adjlist[source]:
-                if sink == edge:
-                    degree += 1
-        return degree
+        return len(self.reverse[vertex])
     
     #
     # Create a file tha can be imported to cytoscape for visualise the graph
@@ -92,9 +91,10 @@ class Graph:
             for vin in self.adjlist[vout]:
                 OutFile.write(self.vertexhash[vout]+" predecessor "+self.vertexhash[vin]+"\n") 
         OutFile.close()
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     # Breadth-First Search Method: This methos apply a breadth-first search 
-    # for find all the vertex that canbe reach from a given source vertex s.
+    # for find all the vertex that can be reach from a given source vertex s.
     # Input: 
     #   s <the source vertex.>
     # Output:
@@ -126,8 +126,109 @@ class Graph:
                     Q.append(v)
             color[u] = 'B'
             visited.append(u);
-        return visited#[color,distance,predecessor]
+        return visited
     
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # Breadth-First Search Reverse Method: This methos apply a breadth-first 
+    # search  for find all the vertex that can be reach from a given source 
+    # vertex s, but traversing the graph in reverse direction.
+    # Input: 
+    #   s <the source vertex.>
+    # Output:
+    #   visited <a list with the verxter that can be reach from the source.>
+    #       
+    # Last update(03/28/2012) 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    def bfsr(self,s):
+        color=[]
+        distance=[]
+        predecessor=[]
+        visited = []        
+        for i in range(0,len(self.vertexhash)):
+            color.append('W')
+            distance.append(())
+            predecessor.append('NIL')
+        color[s] = 'G'
+        distance[s] = 0
+        predecessor[s] = 'NIL'
+        Q = []
+        Q.append(s)
+        while (len(Q) != 0):
+            u = Q.pop(0)
+            for v in self.reverse[u]:
+                if (color[v] == 'W'):
+                    color[v] = 'G'
+                    distance[v] = distance[u]+1
+                    predecessor[v] = u
+                    Q.append(v)
+            color[u] = 'B'
+            visited.append(u);
+        return visited
+    
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # Breadth-First Search Bi-directional Method: This methos apply a 
+    # breadth-first search for find all the vertex that can be reach from a 
+    # given source vertex s, but traversing the graph in both directions.
+    # Input: 
+    #   s <the source vertex.>
+    # Output:
+    #   visited <a list with the verxter that can be reach from the source.>
+    #           
+    # Last update(03/28/2012) 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    def bfsbd(self,s):
+        color=[]
+        distance=[]
+        predecessor=[]
+        visited = []        
+        for i in range(0,len(self.vertexhash)):
+            color.append('W')
+            distance.append(())
+            predecessor.append('NIL')
+        color[s] = 'G'
+        distance[s] = 0
+        predecessor[s] = 'NIL'
+        Q = []
+        Q.append(s)
+        while (len(Q) != 0):
+            u = Q.pop(0)
+            bothdirection = self.reverse[u]
+            bothdirection.extend(self.adjlist[u])
+            bothdirection = list(set(bothdirection))
+            for v in bothdirection:
+                if (color[v] == 'W'):
+                    color[v] = 'G'
+                    distance[v] = distance[u]+1
+                    predecessor[v] = u
+                    Q.append(v)
+            color[u] = 'B'
+            visited.append(u);
+        return visited
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # Conected Components Method: This methos find the numeber of connected 
+    # components in the graph.
+    # 
+    # Input: 
+    #    <none>
+    # Output:
+    #   count <the number of connected componentes in the graph>
+    #           
+    # Last update(03/28/2012) 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    def cc(self):
+        count = 0 
+        color=[]
+        def paint(v):
+            color[v] = 'B'
+            return
+        for i in range(0,len(self.vertexhash)):
+            color.append('W')
+        while color.count('W'):
+            visited = self.bfsbd(color.index('W'))
+            map(paint,visited)
+            count = count + 1
+        return count
+
     def transposed(self):
         transposed = {i:[] for i in range(len(self.vertexhash))}
         for vertex in range(len(self.vertexhash)):
@@ -191,13 +292,16 @@ class Graph:
 
 if __name__ == '__main__':
     G = Graph()
-    Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
+    Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"],["six","seven"],["seven","eigth"],["nine","ten"]];
     Components = [['c','g'],['g','f'],['f','g'],['h','h'],['d','h'],['c','d'],['d','c'],['g','h'],['a','b'],['b','c'],['b','f'],['e','f'],['b','e'],['e','a']]
    
-    G.initWithEdges(list(Components))
-#    for v in G.vertexhash:
-#        print G.bfs(G.a19merhash[v])
-
+    G.initWithEdges(list(Edges))
+    print G.adjlist
+    print G.reverse
+    for v in G.vertexhash:
+        print v
+        print G.bfsbd(G.a19merhash[v])
+    print G.cc()
     #G.createCytoscapeFile("test.sif");
     print "Outdegrees?", G.vertexDegrees()
     print "Indegrees", [G.indegree(vertex) for vertex in range(len(G.vertexhash))]
