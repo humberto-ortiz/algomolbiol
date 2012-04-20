@@ -15,7 +15,6 @@ def fleurys(G):
 	#Check vertex degrees
 	for v in range(0,len(G.adjlist)):
 		degree = abs(G.vertexDegree(v) - G.indegree(v))
-#		print 'outdeg = ' + repr(G.vertexDegree(v)) + ' indegree = ' + repr(G.indegree(v)) + ' degree = ' + repr(degree)
 		if degree == 1:   #if v is semi-balanced.
 			oddcount += 1
 			
@@ -51,9 +50,6 @@ def fleurys(G):
 		while len(eulerPath) < totalEdges:
 			initCCcount = H.cc()             #initial CC count, before edge removal.
 
-#			print current
-#			print H.adjlist[current]
-			
 			adj = deque(H.adjlist[current])    #to store adjacencies of vertex currently being considered.
 			remv_adj = adj.popleft()           #to store the adjacency just removed.
 			first_remv = remv_adj              #to remember which was the first adjacency removal attempted.
