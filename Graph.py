@@ -192,7 +192,7 @@ class Graph:
         Q.append(s)
         while (len(Q) != 0):
             u = Q.pop(0)
-            bothdirection = self.reverse[u]
+            bothdirection = self.reverse[u][:] # make a copy, instead of aliasing reverse and killing the graph
             bothdirection.extend(self.adjlist[u])
             bothdirection = list(set(bothdirection))
             for v in bothdirection:
