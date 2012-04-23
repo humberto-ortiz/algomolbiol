@@ -78,8 +78,8 @@ class Graph:
     def vertexDegree(self,vertex):
         return len(self.adjlist[vertex])
 
-    def indegree(self, sink):
-        "Compute the indegree of the SINK vertex."
+    def indegree(self, vertex):
+        "Compute the indegree of the given VERTEX."
         return len(self.reverse[vertex])
     
     #
