@@ -4,9 +4,9 @@ from collections import deque
 
 def fleurys(G):
 
-	#Reject the graph if its vertices are not all part of a single SCC.
-	if G.scc() > 1:
-		return "There is no Eulerian path for this graph."
+	#Reject the graph if its vertices are not all part of a single CC.
+	if G.cc() > 1:
+		return "There is no Eulerian path for this graph.1"
 
 	oddSource = -1         #to be used if at least one vertex has odd degree. 
 	evenSource = -1        #to be used if all vertices have even degree.
@@ -14,21 +14,25 @@ def fleurys(G):
 	
 	#Check vertex degrees
 	for v in range(0,len(G.adjlist)):
-		degree = G.vertexDegree(v)
-		if degree % 2 == 1:   #if degree of v is odd.
+		degree = abs(G.vertexDegree(v) - G.indegree(v))
+		if degree == 1:   #if v is semi-balanced.
 			oddcount += 1
 			
 			#Reject the graph if more than two vertices have odd degree.
 			if oddcount > 2:
-				return "There is no Eulerian path for this graph."
+				return "There is no Eulerian path for this graph.2"
 
 			#Initialize oddSource
 			if oddSource == -1:
 				oddSource = v
 
-		#Store a vertex if it has even degree > 0.
-		elif degree > 0:
+		#Store a balanced vertex that will be used as source if all vertices are balanced.
+		elif evenSource == -1 and degree == 0:
 			evenSource = v
+
+		#Reject the graph if any vertex has a difference between out and in degree greater than 1.
+		elif degree > 1:
+			return "There is no Eulerian path for this graph.3"
 
 	H = deepcopy(G) #make a copy of the graph for internal use.
 	eulerPath = []  #to store the edges of the Eulerian path.
@@ -44,8 +48,8 @@ def fleurys(G):
 
 		current = source
 		while len(eulerPath) < totalEdges:
-			initSCCcount = H.scc()             #initial SCC count, before edge removal.
-			
+			initCCcount = H.cc()             #initial CC count, before edge removal.
+
 			adj = deque(H.adjlist[current])    #to store adjacencies of vertex currently being considered.
 			remv_adj = adj.popleft()           #to store the adjacency just removed.
 			first_remv = remv_adj              #to remember which was the first adjacency removal attempted.
@@ -54,17 +58,17 @@ def fleurys(G):
 			found = False                      #to keep track of whether we've found the Eulerian edge or not.
 
 			while not found:
-				if H.scc() == initSCCcount:   #greedily select for edges that do not increase the amount of SCCs when removed.
+				if H.cc() == initCCcount:   #greedily select for edges that do not increase the amount of CCs when removed.
 					eulerPath.append([current, remv_adj])
 					current = remv_adj      #select the next vertex in the path
 					found = True
 
 
-				else:  #the removed edge increases the amount of SCCs.
+				else:  #the removed edge increases the amount of CCs.
 					adj.append(remv_adj)
 					remv_adj = adj.popleft()   #try the next adjacency.
 
-					if remv_adj == first_remv:  #all edges would increase the amount of SCCs, so choose any one.
+					if remv_adj == first_remv:  #all edges would increase the amount of CCs, so choose any one.
 						eulerPath.append([current, remv_adj])
 						current = remv_adj      #select the next vertex in the path
 						found = True
