@@ -309,6 +309,34 @@ class Graph:
             else:
                 return 0
         return componentaux(self.a19merhash.values())
+
+    def undirected(self):
+        undirected = [[]*i for i in xrange(len(self.vertexhash))]
+        for i in xrange(len(self.vertexhash)):
+            undirected[i]=self.adjlist[i]+self.reverse[i]
+        return undirected
+            
+    def components(self):
+        undirected=self.undirected()
+        def known(here):
+            visited=[]
+            def knownaux(vertices, visited):
+                neighbours=[]
+                for vertex in vertices:
+                    for neighbour in undirected[vertex]:
+                        if neighbour not in visited:
+                            neighbours.append(neighbour)
+                if neighbours:
+                    return knownaux(neighbours, visited+neighbours)
+                else:
+                    return visited
+            return knownaux([here],visited)
+        def componentaux(vertices):
+            if vertices:
+                return 1+componentaux(list(set(vertices).difference(known(vertices[0]))))
+            else:
+                return 0
+        return componentaux(self.a19merhash.values())
 # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #   _____        _     ______                     #
 #  |_   _|      | |   |___  /                     #
