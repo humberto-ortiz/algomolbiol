@@ -78,8 +78,8 @@ class Graph:
     def vertexDegree(self,vertex):
         return len(self.adjlist[vertex])
 
-    def indegree(self, sink):
-        "Compute the indegree of the SINK vertex."
+    def indegree(self, vertex):
+        "Compute the indegree of the given VERTEX."
         return len(self.reverse[vertex])
     
     #
@@ -91,9 +91,10 @@ class Graph:
             for vin in self.adjlist[vout]:
                 OutFile.write(self.vertexhash[vout]+" predecessor "+self.vertexhash[vin]+"\n") 
         OutFile.close()
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     # Breadth-First Search Method: This methos apply a breadth-first search 
-    # for find all the vertex that canbe reach from a given source vertex s.
+    # for find all the vertex that can be reach from a given source vertex s.
     # Input: 
     #   s <the source vertex.>
     # Output:
@@ -125,8 +126,109 @@ class Graph:
                     Q.append(v)
             color[u] = 'B'
             visited.append(u);
-        return visited#[color,distance,predecessor]
+        return visited
     
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # Breadth-First Search Reverse Method: This methos apply a breadth-first 
+    # search  for find all the vertex that can be reach from a given source 
+    # vertex s, but traversing the graph in reverse direction.
+    # Input: 
+    #   s <the source vertex.>
+    # Output:
+    #   visited <a list with the verxter that can be reach from the source.>
+    #       
+    # Last update(03/28/2012) 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    def bfsr(self,s):
+        color=[]
+        distance=[]
+        predecessor=[]
+        visited = []        
+        for i in range(0,len(self.vertexhash)):
+            color.append('W')
+            distance.append(())
+            predecessor.append('NIL')
+        color[s] = 'G'
+        distance[s] = 0
+        predecessor[s] = 'NIL'
+        Q = []
+        Q.append(s)
+        while (len(Q) != 0):
+            u = Q.pop(0)
+            for v in self.reverse[u]:
+                if (color[v] == 'W'):
+                    color[v] = 'G'
+                    distance[v] = distance[u]+1
+                    predecessor[v] = u
+                    Q.append(v)
+            color[u] = 'B'
+            visited.append(u);
+        return visited
+    
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # Breadth-First Search Bi-directional Method: This methos apply a 
+    # breadth-first search for find all the vertex that can be reach from a 
+    # given source vertex s, but traversing the graph in both directions.
+    # Input: 
+    #   s <the source vertex.>
+    # Output:
+    #   visited <a list with the verxter that can be reach from the source.>
+    #           
+    # Last update(03/28/2012) 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    def bfsbd(self,s):
+        color=[]
+        distance=[]
+        predecessor=[]
+        visited = []        
+        for i in range(0,len(self.vertexhash)):
+            color.append('W')
+            distance.append(())
+            predecessor.append('NIL')
+        color[s] = 'G'
+        distance[s] = 0
+        predecessor[s] = 'NIL'
+        Q = []
+        Q.append(s)
+        while (len(Q) != 0):
+            u = Q.pop(0)
+            bothdirection = self.reverse[u][:] # make a copy, instead of aliasing reverse and killing the graph
+            bothdirection.extend(self.adjlist[u])
+            bothdirection = list(set(bothdirection))
+            for v in bothdirection:
+                if (color[v] == 'W'):
+                    color[v] = 'G'
+                    distance[v] = distance[u]+1
+                    predecessor[v] = u
+                    Q.append(v)
+            color[u] = 'B'
+            visited.append(u);
+        return visited
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # Conected Components Method: This methos find the numeber of connected 
+    # components in the graph.
+    # 
+    # Input: 
+    #    <none>
+    # Output:
+    #   count <the number of connected componentes in the graph>
+    #           
+    # Last update(03/28/2012) 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    def cc(self):
+        count = 0 
+        color=[]
+        def paint(v):
+            color[v] = 'B'
+            return
+        for i in range(0,len(self.vertexhash)):
+            color.append('W')
+        while color.count('W'):
+            visited = self.bfsbd(color.index('W'))
+            map(paint,visited)
+            count = count + 1
+        return count
+
     def transposed(self):
         transposed = {i:[] for i in range(len(self.vertexhash))}
         for vertex in range(len(self.vertexhash)):
@@ -218,13 +320,16 @@ class Graph:
 
 if __name__ == '__main__':
     G = Graph()
-    Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"]];
+    Edges = [["two","zero"],["two","one"],["three","two"],["three","one"],["fourth","three"],["fourth","two"],["five","three"],["five","fourth"],["six","seven"],["seven","eigth"],["nine","ten"]];
     Components = [['c','g'],['g','f'],['f','g'],['h','h'],['d','h'],['c','d'],['d','c'],['g','h'],['a','b'],['b','c'],['b','f'],['e','f'],['b','e'],['e','a']]
    
-    G.initWithEdges(list(Components))
-#    for v in G.vertexhash:
-#        print G.bfs(G.a19merhash[v])
-
+    G.initWithEdges(list(Edges))
+    print G.adjlist
+    print G.reverse
+    for v in G.vertexhash:
+        print v
+        print G.bfsbd(G.a19merhash[v])
+    print G.cc()
     #G.createCytoscapeFile("test.sif");
     print "Outdegrees?", G.vertexDegrees()
     print "Indegrees", [G.indegree(vertex) for vertex in range(len(G.vertexhash))]
