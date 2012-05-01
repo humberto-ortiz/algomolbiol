@@ -13,7 +13,7 @@ def fleurys(G):
 	oddcount = 0           #for counting how many odd-degree vertices there are in the graph.
 	
 	#Check vertex degrees
-	for v in range(0,len(G.adjlist)):
+	for v in G.vertexhash:
 		degree = abs(G.vertexDegree(v) - G.indegree(v))
 		if degree == 1:   #if v is semi-balanced.
 			oddcount += 1
