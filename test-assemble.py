@@ -1,12 +1,11 @@
 import Graph
-import Fleu
 
 G = Graph.Graph()
 
 G.initWithSeqReads("tiny.fasta", "fasta")
 
 
-eulerian =  Fleu.fleurys(G)
+eulerian =  G.fleurys()
 
 seq = ""
 
