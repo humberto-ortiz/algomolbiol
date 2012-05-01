@@ -19,7 +19,7 @@ class Graph:
     def initWithSeqReads(self,file,type):
         k = 20      # Edge size, vertex size is k-1
     	for record in SeqIO.parse(file, type):
-	    for i in range(0, len(record) - (k-2)):
+	    for i in range(0, len(record) - (k-1)):
 	        edgeseq = str(record[i:i+k].seq)
 		source = edgeseq[:k-1]
 		sink = edgeseq[1:]
@@ -31,9 +31,11 @@ class Graph:
 			self.vertexhash.append(vertex)
 			self.adjlist.append([])
                         self.reverse.append([])
-            #   Fills in the adjacency list
-		self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
-                self.reverse[self.a19merhash[sink]].append(self.a19merhash[source])
+                #   Fills in the adjacency list, discarding duplicate edges
+                if self.a19merhash[sink] not in self.adjlist[self.a19merhash[source]]:
+                    self.adjlist[self.a19merhash[source]].append(self.a19merhash[sink])
+                if self.a19merhash[source] not in self.reverse[self.a19merhash[sink]]:
+                    self.reverse[self.a19merhash[sink]].append(self.a19merhash[source])
                 
     def initWithFile(file):
         return 'not implemented yet'
